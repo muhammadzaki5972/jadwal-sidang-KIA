@@ -326,7 +326,7 @@ const PublicCalendarPage = () => {
                     {format(new Date(currentSchedule.tanggal), 'EEEE, dd MMMM yyyy', { locale: idLocale })}
                   </p>
                   <div>
-                    <span className="badge badge-sm bg-white text-primary border-none font-bold shadow-sm px-2 py-2.5">{currentSchedule.waktu} WIB</span>
+                    <span className="badge badge-sm bg-white text-primary border-none font-bold shadow-sm px-2 py-2.5">Pukul: {currentSchedule.waktu?.substring(0, 5)} WIB</span>
                   </div>
                 </div>
                 {selectedDaySchedules.length > 1 && (

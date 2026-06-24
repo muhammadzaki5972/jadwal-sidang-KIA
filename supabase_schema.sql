@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS public.jadwal_sidang (
 -- Seed Data: 15 Agenda Dummy
 INSERT INTO public.agenda_sidang (nama_agenda) VALUES
 ('Pemeriksaan Awal'),
-('Pembuktian Dokumen'),
-('Mendengarkan Keterangan Saksi'),
+('Pemeriksaan Awal 2'),
+('Pemeriksaan Awal 3'),
 ('Mendengarkan Keterangan Ahli'),
 ('Pemeriksaan Setempat'),
 ('Kesimpulan Para Pihak'),
