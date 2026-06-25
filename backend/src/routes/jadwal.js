@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
             *,
             pemohon:pemohon_id(id, nama_pemohon, kategori_pemohon),
             termohon:termohon_id(id, nama_termohon, kategori_termohon),
-            agenda:agenda_id(id, nama_agenda)
+            agenda:agenda_id(id, nama_agenda, warna)
         `)
         .order('tanggal', { ascending: true })
         .order('waktu', { ascending: true });

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import { LayoutDashboard, Users, UserCog, CalendarDays, LogOut, Menu, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Users, UserCog, CalendarDays, ClipboardList, LogOut, Menu, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const AdminLayout = () => {
   const logout = useAuthStore((state) => state.logout);
@@ -17,6 +17,7 @@ const AdminLayout = () => {
     { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
     { name: 'Data Pemohon', path: '/admin/pemohon', icon: <Users size={20} /> },
     { name: 'Data Termohon', path: '/admin/termohon', icon: <UserCog size={20} /> },
+    { name: 'Agenda Sidang', path: '/admin/agenda', icon: <ClipboardList size={20} /> },
     { name: 'Jadwal Sidang', path: '/admin/jadwal', icon: <CalendarDays size={20} /> },
   ];
 

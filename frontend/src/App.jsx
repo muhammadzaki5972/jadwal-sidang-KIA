@@ -12,6 +12,7 @@ import DashboardPage from './pages/admin/DashboardPage';
 import PemohonPage from './pages/admin/PemohonPage';
 import TermohonPage from './pages/admin/TermohonPage';
 import JadwalPage from './pages/admin/JadwalPage';
+import AgendaPage from './pages/admin/AgendaPage';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -36,6 +37,7 @@ function App() {
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="pemohon" element={<PemohonPage />} />
           <Route path="termohon" element={<TermohonPage />} />
+          <Route path="agenda" element={<AgendaPage />} />
           <Route path="jadwal" element={<JadwalPage />} />
         </Route>
       </Routes>

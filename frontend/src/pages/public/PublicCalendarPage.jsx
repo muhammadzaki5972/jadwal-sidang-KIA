@@ -16,6 +16,18 @@ const PublicCalendarPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Helper to determine text color based on background brightness
+  const getContrastColor = (hexcolor) => {
+    if (!hexcolor) return '#ffffff';
+    hexcolor = hexcolor.replace('#', '');
+    if (hexcolor.length === 3) hexcolor = hexcolor.split('').map(c => c + c).join('');
+    const r = parseInt(hexcolor.substring(0, 2), 16);
+    const g = parseInt(hexcolor.substring(2, 4), 16);
+    const b = parseInt(hexcolor.substring(4, 6), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return (yiq >= 128) ? '#0f172a' : '#ffffff'; // Slate-900 or White
+  };
+
   useEffect(() => {
     const fetchSchedules = async () => {
       try {
@@ -133,14 +145,21 @@ const PublicCalendarPage = () => {
                   <div className="w-full sm:w-2/3 flex flex-col items-center sm:items-start text-center sm:text-left">
                     <div className="badge badge-ghost font-bold mb-2 py-3 px-4">Pukul: {schedule.waktu?.substring(0, 5)} WIB</div>
                     <h4 className="text-lg font-black text-base-content mb-1">No Reg: {schedule.no_register}</h4>
-                    <div className="flex flex-col items-center sm:items-start gap-1 mt-2 w-full">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1 sm:gap-2 mt-2 w-full text-center sm:text-left">
                       <span className="text-sm font-semibold text-base-content/80 leading-snug">{schedule.pemohon?.nama_pemohon}</span>
-                      <span className="text-xs font-bold text-base-content/40 uppercase italic my-1">vs</span>
+                      <span className="text-xs font-bold text-base-content/40 uppercase italic my-1 sm:my-0">vs</span>
                       <span className="text-sm font-semibold text-base-content/80 leading-snug">{schedule.termohon?.nama_termohon}</span>
                     </div>
                   </div>
-                  <div className="w-full sm:w-auto mt-2 sm:mt-0">
-                    <div className="badge badge-warning badge-sm font-bold h-auto py-2 px-4 whitespace-normal text-center w-full sm:w-auto">
+                  <div className="w-full sm:w-auto mt-4 sm:mt-0 flex flex-col items-center sm:items-end justify-center">
+                    <span className="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-2">Agenda Sidang</span>
+                    <div
+                      className="badge badge-sm font-bold h-auto py-2 px-4 whitespace-normal text-center w-full sm:w-auto border-none shadow-sm"
+                      style={{
+                        backgroundColor: schedule.agenda?.warna || '#eab308',
+                        color: getContrastColor(schedule.agenda?.warna || '#eab308')
+                      }}
+                    >
                       {schedule.agenda?.nama_agenda}
                     </div>
                   </div>
@@ -356,7 +375,13 @@ const PublicCalendarPage = () => {
 
                 <div className="text-center">
                   <p className="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-2">Agenda Sidang</p>
-                  <div className="badge badge-primary badge-lg font-bold gap-2 p-4 h-auto text-center whitespace-normal">
+                  <div
+                    className="badge badge-lg font-bold gap-2 p-4 h-auto text-center whitespace-normal border-none shadow-md"
+                    style={{
+                      backgroundColor: currentSchedule.agenda?.warna || '#eab308',
+                      color: getContrastColor(currentSchedule.agenda?.warna || '#eab308')
+                    }}
+                  >
                     {currentSchedule.agenda?.nama_agenda}
                   </div>
                 </div>

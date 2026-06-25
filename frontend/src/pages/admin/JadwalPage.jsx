@@ -14,6 +14,18 @@ const JadwalPage = () => {
   const [agendas, setAgendas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Helper to determine text color based on background brightness
+  const getContrastColor = (hexcolor) => {
+    if (!hexcolor) return '#ffffff';
+    hexcolor = hexcolor.replace('#', '');
+    if (hexcolor.length === 3) hexcolor = hexcolor.split('').map(c => c + c).join('');
+    const r = parseInt(hexcolor.substring(0, 2), 16);
+    const g = parseInt(hexcolor.substring(2, 4), 16);
+    const b = parseInt(hexcolor.substring(4, 6), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return (yiq >= 128) ? '#0f172a' : '#ffffff';
+  };
   
   const initialFormState = {
     id: null,
@@ -147,7 +159,13 @@ const JadwalPage = () => {
                       <div className="text-sm text-base-content/80">{item.termohon?.nama_termohon}</div>
                     </td>
                     <td>
-                      <span className="badge badge-warning badge-sm py-3 px-3 font-semibold gap-1">
+                      <span 
+                        className="badge badge-sm py-3 px-3 font-semibold gap-1 border-none shadow-sm"
+                        style={{ 
+                          backgroundColor: item.agenda?.warna || '#eab308',
+                          color: getContrastColor(item.agenda?.warna || '#eab308')
+                        }}
+                      >
                         {item.agenda?.nama_agenda}
                       </span>
                     </td>
