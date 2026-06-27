@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, MapPin, Phone, Mail } from 'lucide-react';
 import {
   format, addMonths, subMonths, addWeeks, subWeeks, addDays, subDays, addYears, subYears,
@@ -15,6 +15,13 @@ const PublicCalendarPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const modalContentRef = useRef(null);
+
+  useEffect(() => {
+    if (isModalOpen && modalContentRef.current) {
+      modalContentRef.current.scrollTop = 0;
+    }
+  }, [isModalOpen, currentSlide]);
 
   // Helper to determine text color based on background brightness
   const getContrastColor = (hexcolor) => {
@@ -140,7 +147,7 @@ const PublicCalendarPage = () => {
             </div>
           ) : (
             daySchedules.map((schedule, idx) => (
-              <div key={idx} className="card bg-base-100 border border-base-200 shadow-sm hover:shadow-md transition-all cursor-pointer" onClick={() => handleDayClick([schedule])}>
+              <div key={idx} className="card bg-base-[#e0e0e0] neumorphic hover:-translate-y-1 transition-all duration-300 cursor-pointer" onClick={() => handleDayClick([schedule])}>
                 <div className="card-body p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                   <div className="w-full sm:w-2/3 flex flex-col items-center sm:items-start text-center sm:text-left">
                     <div className="badge badge-ghost font-bold mb-2 py-3 px-4">Pukul: {schedule.waktu?.substring(0, 5)} WIB</div>
@@ -171,19 +178,19 @@ const PublicCalendarPage = () => {
       );
     }
 
-    // Month & Week View sharing the same grid style
+    // Month & Week View sharing the same grid style (Bagian Nama Hari, Tanggal, dll)
     return (
       <div className="card-body p-4 sm:p-8">
         <div className="grid grid-cols-5 gap-2 sm:gap-4 mb-2">
           {weekDays.map(day => (
-            <div key={day} className="text-center font-bold text-base-content/50 text-xs sm:text-sm py-0.5 uppercase tracking-wider">
+            <div key={day} className="text-center font-bold text-base-content/30 text-[10px] sm:text-sm py-0.25 capitalize tracking-wider">
               <span className="hidden sm:inline">{day}</span>
-              <span className="sm:hidden">{day.substring(0, 3)}</span>
+              <span className="sm:hidden">{day.substring(0, 6)}</span>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-5 gap-2 sm:gap-4">
+        <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
           {days.map((day, idx) => {
             const daySchedules = getSchedulesForDay(day);
             const hasSchedule = daySchedules.length > 0;
@@ -195,18 +202,18 @@ const PublicCalendarPage = () => {
                 key={idx}
                 onClick={() => handleDayClick(daySchedules)}
                 className={`
-                  min-h-[80px] sm:min-h-[120px] p-2 sm:p-3 rounded-2xl border-2 transition-all duration-300 flex flex-col
+                  min-h-[60px] sm:min-h-[120px] p-2 sm:p-3 rounded-sm rounded-[6px] sm:rounded-[8px] border-[1px] sm:border-[2.5px] transition-all duration-300 flex flex-col
                   ${!isCurrentMonth ? 'bg-base-200/50 text-base-content/30 border-transparent' : 'bg-base-100 border-base-200 hover:border-primary/50 hover:shadow-lg cursor-pointer'}
-                  ${hasSchedule ? 'ring-2 ring-primary ring-offset-2 ring-offset-base-100 border-primary shadow-sm' : ''}
+                  ${hasSchedule ? 'border-primary shadow-sm' : ''}
                   ${today && isCurrentMonth ? 'bg-info/10 border-info border-dashed shadow-inner' : ''}
                 `}
               >
                 <div className="flex justify-between items-start">
-                  <span className={`text-sm sm:text-base font-bold w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center rounded-full ${hasSchedule ? 'bg-primary text-primary-content shadow-md' : ''}`}>
+                  <span className={`text-[10px] sm:text-base font-bold w-4 h-4 sm:w-8 sm:h-8 flex items-center justify-center rounded-full ${hasSchedule ? 'bg-primary text-primary-content shadow-md' : ''}`}>
                     {format(day, 'd')}
                   </span>
                   {hasSchedule && (
-                    <span className="w-2.5 h-2.5 bg-error rounded-full animate-pulse shadow-sm"></span>
+                    <span className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 bg-green-500 rounded-full animate-pulse shadow-sm"></span>
                   )}
                 </div>
 
@@ -218,7 +225,7 @@ const PublicCalendarPage = () => {
                       </div>
                     ))
                   ) : hasSchedule ? (
-                    <div className="badge badge-primary badge-sm sm:badge-md font-semibold shadow-sm w-full">
+                    <div className="bg-[#2563eb] text-primary-content text-[7px] sm:text-xs font-semibold px-1 py-0.5 sm:py-1 rounded-[4px] text-center w-full shadow-sm leading-tight break-words">
                       {daySchedules.length} Sidang
                     </div>
                   ) : null}
@@ -232,7 +239,7 @@ const PublicCalendarPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-base-200 font-sans">
+    <div className="min-h-screen flex flex-col bg-[#e0e0e0] font-sans">
       {/* Header Sticky */}
       <div className="navbar bg-base-100/70 backdrop-blur-lg shadow-sm sticky top-0 z-50 px-4 sm:px-8 h-20 border-b border-base-200/50">
         <div className="flex-1 flex items-center gap-4">
@@ -242,8 +249,8 @@ const PublicCalendarPage = () => {
             className="h-13 w-auto"
           />
           <div className="flex flex-col justify-center">
-            <h1 className="text-xl sm:text-2xl font-black text-base-content tracking-tight leading-none">JADWAL PSI KIA</h1>
-            <p className="text-xs sm:text-sm text-base-content/60 font-semibold mt-1">Komisi Informasi Aceh</p>
+            <h1 className="text-xl sm:text-2xl font-black text-base-content tracking-tight leading-none">JADWAL PSI</h1>
+            <p className="text-xs sm:text-sm text-base-content/60 font-semibold leading-none mt-0.5">Komisi Informasi Aceh</p>
           </div>
         </div>
         <div className="flex-none hidden md:flex items-center gap-6">
@@ -257,9 +264,9 @@ const PublicCalendarPage = () => {
       <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex flex-col gap-10">
 
         {/* Calendar Section */}
-        <div className="card bg-base-100 shadow-2xl border border-base-200 overflow-hidden" id="jadwal">
+        <div className="card bg-[#e0e0e0] neumorphic overflow-hidden rounded-2xl" id="jadwal">
           {/* Calendar Header with Tabs */}
-          <div className="p-4 sm:p-6 bg-primary flex flex-col sm:flex-row justify-between items-center text-primary-content gap-4">
+          <div className="p-2 sm:p-4 bg-[#1e3a8a] flex flex-col sm:flex-row justify-between items-center text-primary-content gap-4">
             <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
               <button onClick={handlePrev} className="btn btn-ghost btn-circle btn-sm text-primary-content hover:bg-white/20">
                 <ChevronLeft className="w-6 h-6" />
@@ -272,11 +279,11 @@ const PublicCalendarPage = () => {
               </button>
             </div>
 
-            <div className="flex bg-white/20 p-1 rounded-full w-full sm:w-auto overflow-x-auto gap-1 shadow-inner">
-              <button className={`btn btn-sm rounded-full border-none flex-1 sm:flex-none transition-all ${viewMode === 'day' ? 'bg-white text-info hover:bg-white/90 shadow-sm' : 'bg-transparent text-white hover:bg-white/10 shadow-none'}`} onClick={() => setViewMode('day')}>Hari</button>
-              <button className={`btn btn-sm rounded-full border-none flex-1 sm:flex-none transition-all ${viewMode === 'week' ? 'bg-success text-black hover:bg-white/90 shadow-sm' : 'bg-transparent text-white hover:bg-white/10 shadow-none'}`} onClick={() => setViewMode('week')}>Minggu</button>
-              <button className={`btn btn-sm rounded-full border-none flex-1 sm:flex-none transition-all ${viewMode === 'month' ? 'bg-secondary text-white hover:bg-white/90 hover:text-black shadow-sm' : 'bg-transparent text-white hover:bg-white/10 shadow-none'}`} onClick={() => setViewMode('month')}>Bulan</button>
-              <button className={`btn btn-sm rounded-full border-none flex-1 sm:flex-none transition-all ${viewMode === 'year' ? 'bg-white text-secondary hover:bg-white/90 shadow-sm' : 'bg-transparent text-white hover:bg-white/10 shadow-none'}`} onClick={() => setViewMode('year')}>Tahun</button>
+            <div className="flex bg-white/20 p-1 rounded-[12px] w-[300px] sm:w-auto overflow-x-auto gap-1 shadow-inner">
+              <button className={`btn btn-xs rounded-[8px] border-none flex-1 sm:flex-none transition-all ${viewMode === 'day' ? 'bg-white text-info hover:bg-white/90 shadow-sm' : 'bg-transparent text-white hover:bg-white/10 shadow-none'}`} onClick={() => setViewMode('day')}>Hari</button>
+              <button className={`btn btn-xs rounded-[8px] border-none flex-1 sm:flex-none transition-all ${viewMode === 'week' ? 'bg-success text-black hover:bg-white/90 shadow-sm' : 'bg-transparent text-white hover:bg-white/10 shadow-none'}`} onClick={() => setViewMode('week')}>Minggu</button>
+              <button className={`btn btn-xs rounded-[8px] border-none flex-1 sm:flex-none transition-all ${viewMode === 'month' ? 'bg-secondary text-white hover:bg-white/90 hover:text-black shadow-sm' : 'bg-transparent text-white hover:bg-white/10 shadow-none'}`} onClick={() => setViewMode('month')}>Bulan</button>
+              <button className={`btn btn-xs rounded-[8px] border-none flex-1 sm:flex-none transition-all ${viewMode === 'year' ? 'bg-white text-secondary hover:bg-white/90 shadow-sm' : 'bg-transparent text-white hover:bg-white/10 shadow-none'}`} onClick={() => setViewMode('year')}>Tahun</button>
             </div>
           </div>
 
@@ -356,7 +363,7 @@ const PublicCalendarPage = () => {
               </div>
 
               {/* Content Modal - Scrollable */}
-              <div className="p-6 space-y-6 bg-base-100 overflow-y-auto flex-1">
+              <div ref={modalContentRef} className="p-6 space-y-6 bg-base-100 overflow-y-auto flex-1">
                 <div className="text-center">
                   <p className="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-1">Nomor Register</p>
                   <p className="text-xl font-black text-base-content">{currentSchedule.no_register}</p>
