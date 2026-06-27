@@ -4,9 +4,12 @@ export const useAuthStore = create((set) => ({
   isAuthenticated: false,
   user: null,
   login: (credentials) => {
-    // Dummy login for MVP
-    if (credentials.username === 'admin' && credentials.password === 'admin123') {
-      set({ isAuthenticated: true, user: { username: 'admin', role: 'admin' } });
+    // Get credentials from environment variables or use fallbacks
+    const adminUsername = import.meta.env.VITE_ADMIN_USERNAME || 'admin';
+    const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+
+    if (credentials.username === adminUsername && credentials.password === adminPassword) {
+      set({ isAuthenticated: true, user: { username: adminUsername, role: 'admin' } });
       return true;
     }
     return false;
